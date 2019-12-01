@@ -10,3 +10,8 @@ oro_user:
             value: false
         password_special_chars:
             value: false
+
+oro_theme:
+    themes:
+        oro:
+            logo: bundles/akumapahonia/images/dzien-voli.png

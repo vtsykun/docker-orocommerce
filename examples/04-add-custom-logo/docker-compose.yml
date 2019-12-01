@@ -7,10 +7,11 @@ services:
         hostname: orocommerce
         ports:
             - 127.0.0.1:8080:80
-#        volumes:
-#            - .docker/attachment:/var/www/orocommerce/var/attachment
-#            - .docker/media:/var/www/orocommerce/public/media
-#            - .docker/uploads:/var/www/orocommerce/public/uploads
+        volumes:
+            - .docker/attachment:/var/www/orocommerce/var/attachment
+            - .docker/media:/var/www/orocommerce/public/media
+            - .docker/uploads:/var/www/orocommerce/public/uploads
+            - ./bundles/akuma:/var/www/orocommerce/src/Akuma/Bundle/PahoniaBundle
         environment:
             # installation options
             APPLICATION_URL: http://127.0.0.1:8080

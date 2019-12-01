@@ -1,2 +1,2 @@
 bundles:
-    - { name: Akuma\Bundle\PahoniaBundle\AkumaPahoniaBundle, priority: 100 }
+    - { name: Akuma\Bundle\PahoniaBundle\AkumaPahoniaBundle, priority: 200 }

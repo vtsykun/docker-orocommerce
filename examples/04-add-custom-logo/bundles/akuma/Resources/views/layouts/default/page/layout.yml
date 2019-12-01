@@ -1,0 +1,6 @@
+layout:
+    actions:
+        - '@setOption':
+            id: scroll_top
+            optionName: scroll_top_position
+            optionValue: 'bottom-right'

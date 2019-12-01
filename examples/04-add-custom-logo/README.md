@@ -1,7 +1,37 @@
 ## Customization OroCommerce application
 
-You can use volumes to add custom bundle. See example how to change logo.
+You can use volumes to add custom bundle. See [example](bundles/akuma) how to change logo.
+
+```
+volumes:
+    ./bundles/akuma:/var/www/orocommerce/src/Akuma/Bundle/PahoniaBundle
+```
 
 ```yaml
+version: '2'
 
+services:
+    orocommerce:
+        image: okvpn/orocommerce:3.1
+        container_name: orocommerce
+        hostname: orocommerce
+        ports:
+            - 127.0.0.1:8080:80
+        volumes:
+            - .docker/attachment:/var/www/orocommerce/var/attachment
+            - .docker/media:/var/www/orocommerce/public/media
+            - .docker/uploads:/var/www/orocommerce/public/uploads
+            - ./bundles/akuma:/var/www/orocommerce/src/Akuma/Bundle/PahoniaBundle
+        environment:
+            # installation options
+            APPLICATION_URL: http://127.0.0.1:8080
+            ADMIN_USER: admin
+            ADMIN_PASSWORD: admin
+
+            ORO_DATABASE_DRIVER: pdo_pgsql
+            ORO_DATABASE_HOST: 172.17.0.1
+            ORO_DATABASE_PORT: 5432
+            ORO_DATABASE_USER: postgres
+            ORO_DATABASE_NAME: orocommerce
+            ORO_DATABASE_PASSWORD: 123456
 ```
