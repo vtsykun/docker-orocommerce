@@ -33,9 +33,8 @@ RUN set -eux; \
     \
     docker-php-ext-install pdo pdo_pgsql pdo_mysql sysvsem opcache \
         bz2 soap xsl imap tidy xmlrpc mbstring iconv curl bcmath \
-        ldap intl zip pcntl
-
-RUN runDeps="$( \
+        ldap intl zip pcntl; \
+    runDeps="$( \
 		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
 			| tr ',' '\n' \
 			| sort -u \
@@ -47,14 +46,12 @@ RUN runDeps="$( \
 	apk del --no-network .build-deps
 
 ARG ORO_PLATFORM
-
 RUN cd /var/www/ && \
     git clone -b ${ORO_PLATFORM} https://github.com/oroinc/orocommerce-application.git orocommerce && \
     composer global require hirak/prestissimo && \
     composer install --no-interaction --no-suggest --no-dev --prefer-dist --working-dir /var/www/orocommerce && \
-    rm -rf /var/www/orocommerce/.git
-
-RUN chown www-data:www-data /var/www/orocommerce -R
+    rm -rf /var/www/orocommerce/.git && \
+    chown www-data:www-data /var/www/orocommerce -R
 
 # Disable profiler, see https://github.com/oroinc/platform/pull/974
 # https://github.com/oroinc/platform/issues/910
