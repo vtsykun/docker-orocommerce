@@ -1,0 +1,5 @@
+services:
+    akuma_mq.redelive_extension:
+        class: Akuma\Bundle\PahoniaBundle\Extension\RejectRedeliveredMessageExtension
+        tags:
+            - { name: oro_message_queue.consumption.extension }

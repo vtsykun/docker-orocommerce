@@ -42,7 +42,7 @@ services:
 
 #            Parameters.yml options
             ORO_DATABASE_DRIVER: pdo_pgsql
-            ORO_DATABASE_HOST: 172.17.0.1
+            ORO_DATABASE_HOST: postgres
             ORO_DATABASE_PORT: 5432
             ORO_DATABASE_USER: postgres
             ORO_DATABASE_NAME: orocommerce

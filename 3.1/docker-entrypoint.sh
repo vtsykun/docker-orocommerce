@@ -28,6 +28,8 @@ docker_install_application() {
 
 docker_configure_supervisor() {
   echo 'Update supervisor config'
+  [[ -z "${ORO_CONSUMER_COUNT}" ]] && ORO_CONSUMER_COUNT=1
+  [[ -z "${ORO_CRON}" ]] && ORO_CRON=true
 
   if [[ "$ORO_WEBSOCKET" == "true" ]]; then
     sed -i "s/autostart=.*/autostart=true/" /etc/supervisor.d/4-websocket.conf
@@ -35,9 +37,13 @@ docker_configure_supervisor() {
     sed -i "s/autostart=.*/autostart=false/" /etc/supervisor.d/4-websocket.conf
   fi
 
-  sed -i "s/autostart=.*/autostart=true/" /etc/supervisor.d/2-cron.conf
+  if [[ "$ORO_CRON" == "true" ]]; then
+    sed -i "s/autostart=.*/autostart=true/" /etc/supervisor.d/2-cron.conf
+  else
+    sed -i "s/autostart=.*/autostart=false/" /etc/supervisor.d/2-cron.conf
+  fi
+
   sed -i "s/autostart=.*/autostart=true/" /etc/supervisor.d/3-consumer.conf
-  [[ -z "${ORO_CONSUMER_COUNT}" ]] && ORO_CONSUMER_COUNT=1
   sed -i "s/numprocs=.*/numprocs=$ORO_CONSUMER_COUNT/" /etc/supervisor.d/3-consumer.conf
 }
 
