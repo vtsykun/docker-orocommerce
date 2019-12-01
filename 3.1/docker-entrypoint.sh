@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -Eeox pipefail
 
+# Run install/ update command only under www-data user
+# sudo -u www-data
+# See bug https://github.com/oroinc/platform/issues/958
+
 docker_install_application() {
   [[ -z "${ADMIN_FIRST_NAME}" ]] && ADMIN_FIRST_NAME='Alieś'
   [[ -z "${ADMIN_LAST_NAME}" ]] && ADMIN_LAST_NAME='Zagorski'
@@ -13,10 +17,10 @@ docker_install_application() {
   local dbDriver=$(cat config/parameters.yml | awk '/database_driver:/{ print $2 }')
 
   if [[ "$dbDriver" == "pdo_pgsql" ]]; then
-    php bin/console doctrine:query:sql "CREATE EXTENSION IF NOT EXISTS uuid-ossp" -vvv --env=prod || true
+    sudo -u www-data php bin/console doctrine:query:sql "CREATE EXTENSION IF NOT EXISTS uuid-ossp" -vvv --env=prod || true
   fi
 
-  php bin/console oro:install --env=prod --user-name="${ADMIN_USER}" --user-email="${ADMIN_EMAIL}" \
+  sudo -u www-data php bin/console oro:install --env=prod --user-name="${ADMIN_USER}" --user-email="${ADMIN_EMAIL}" \
       --user-firstname="${ADMIN_FIRST_NAME}" --user-lastname="${ADMIN_LAST_NAME}" \
       --user-password="${ADMIN_PASSWORD}" --sample-data=n --organization-name="${ORGANIZATION_NAME}" \
       --no-interaction --application-url="${APPLICATION_URL}" --timeout=3600 --symlink
@@ -41,7 +45,10 @@ echo 'Updating parameters.yml'
 php env-map.php
 
 docker_configure_supervisor
-composer install --no-interaction --no-suggest --no-dev --prefer-dist --optimize-autoloader
+sudo -u www-data composer install --no-interaction --no-suggest --no-dev --prefer-dist --optimize-autoloader
+
+chown www-data:www-data /var/www/orocommerce/var -R
+chown www-data:www-data /var/www/orocommerce/public -R
 
 # check if application is installed
 [[ -z "${ORO_INSTALLED}" ]] && ORO_INSTALLED=$(php install-checker.php)
@@ -49,28 +56,25 @@ rm -rf var/cache/*
 
 if [[ "$ORO_INSTALLED" == "false" ]]; then
   echo 'Install OroCommerce'
-  php bin/console --env=prod > /dev/null || true
-  php bin/console about --env=prod || true
+  sudo -u www-data php bin/console --env=prod > /dev/null || true
+  sudo -u www-data php bin/console about --env=prod || true
 
   docker_install_application
 else
   echo 'Clear cache'
   sed -i "s/installed"\:".*/installed"\:" true/g" config/parameters.yml
-  php bin/console --env=prod > /dev/null || true
-  php bin/console about --env=prod || true
+  sudo -u www-data php bin/console --env=prod > /dev/null || true
+  sudo -u www-data php bin/console about --env=prod || true
 
   # Update application only one times (if a new container)
   if [[ ! -f '/.oro-installed' ]]; then
     echo 'Update application ...'
-    php bin/console oro:platform:update --env=prod --force --symlink --skip-search-reindexation --timeout=3600
+    sudo -u www-data php bin/console oro:platform:update --env=prod --force --symlink --skip-search-reindexation --timeout=3600
   fi
 fi
 
 # Flag that application is installed or updated.
 touch /.oro-installed
-
-chown www-data:www-data /var/www/orocommerce/var -R
-chown www-data:www-data /var/www/orocommerce/public -R
 cat banner.txt
 
 "$@"

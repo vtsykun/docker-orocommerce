@@ -60,10 +60,10 @@ RUN chown www-data:www-data /var/www/orocommerce -R
 # https://github.com/oroinc/platform/issues/910
 RUN echo $'\nframework:\n\
     profiler:\n\
-        enabled: false' >> /var/www/orocommerce/config/config_prod.yml
+        enabled: false' >> /var/www/orocommerce/config/config_prod.yml && \
+        apk add --no-cache sudo
 
 # Default range for docker, see index.php
-ENV TRUSTED_PROXIES=172.16.0.0/12
 COPY php/www.conf /usr/local/etc/php-fpm.d/zzz-custom.conf
 COPY php/php.ini /usr/local/etc/php/conf.d/zzz-custom.ini
 
