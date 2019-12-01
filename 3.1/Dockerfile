@@ -1,13 +1,13 @@
 FROM php:7.2-fpm-alpine
 
 RUN apk --no-cache add nginx supervisor curl imagemagick libpng nodejs npm \
-    git rsync libldap freetype libjpeg-turbo bash nano
+    git rsync libldap freetype libjpeg-turbo bash nano sudo
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# See https://github.com/docker-library/php/issues/240
-RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing gnu-libiconv
-ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
+# workaround for https://github.com/docker-library/php/issues/240
+RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ gnu-libiconv
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 
 RUN set -eux; \
 	apk add --no-cache --virtual .build-deps \
@@ -60,8 +60,7 @@ RUN chown www-data:www-data /var/www/orocommerce -R
 # https://github.com/oroinc/platform/issues/910
 RUN echo $'\nframework:\n\
     profiler:\n\
-        enabled: false' >> /var/www/orocommerce/config/config_prod.yml && \
-        apk add --no-cache sudo
+        enabled: false' >> /var/www/orocommerce/config/config_prod.yml
 
 # Default range for docker, see index.php
 COPY php/www.conf /usr/local/etc/php-fpm.d/zzz-custom.conf
@@ -75,7 +74,8 @@ COPY php/index.php /var/www/orocommerce/public/
 COPY php/install-checker.php php/env-map.php php/banner.txt /var/www/orocommerce/
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN rm /etc/supervisor.d/supervisord.conf && chmod +x /usr/local/bin/app && \
-    chmod +x /usr/local/bin/docker-entrypoint.sh
+    chmod +x /usr/local/bin/docker-entrypoint.sh && \
+    chown www-data:www-data /var/tmp/nginx
 
 WORKDIR /var/www/orocommerce
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]

@@ -17,10 +17,10 @@ docker_install_application() {
   local dbDriver=$(cat config/parameters.yml | awk '/database_driver:/{ print $2 }')
 
   if [[ "$dbDriver" == "pdo_pgsql" ]]; then
-    sudo -u www-data php bin/console doctrine:query:sql "CREATE EXTENSION IF NOT EXISTS uuid-ossp" -vvv --env=prod || true
+    sudo -u www-data php bin/console doctrine:query:sql 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp"' -vvv --env=prod || true
   fi
 
-  sudo -u www-data php bin/console oro:install --env=prod --user-name="${ADMIN_USER}" --user-email="${ADMIN_EMAIL}" \
+  sudo --preserve-env=LD_PRELOAD -u www-data php bin/console oro:install --env=prod --user-name="${ADMIN_USER}" --user-email="${ADMIN_EMAIL}" \
       --user-firstname="${ADMIN_FIRST_NAME}" --user-lastname="${ADMIN_LAST_NAME}" \
       --user-password="${ADMIN_PASSWORD}" --sample-data=n --organization-name="${ORGANIZATION_NAME}" \
       --no-interaction --application-url="${APPLICATION_URL}" --timeout=3600 --symlink
@@ -69,7 +69,8 @@ else
   # Update application only one times (if a new container)
   if [[ ! -f '/.oro-installed' ]]; then
     echo 'Update application ...'
-    sudo -u www-data php bin/console oro:platform:update --env=prod --force --symlink --skip-search-reindexation --timeout=3600
+    sudo --preserve-env=LD_PRELOAD -u www-data php bin/console oro:platform:update --env=prod \
+      --force --symlink --skip-search-reindexation --timeout=7200
   fi
 fi
 
