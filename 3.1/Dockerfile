@@ -1,6 +1,6 @@
 FROM php:7.2-fpm-alpine
 
-RUN apk --no-cache add nginx supervisor curl imagemagick libpng nodejs npm \
+RUN apk --no-cache add nginx supervisor curl imagemagick libpng nodejs-current npm \
     git rsync libldap freetype libjpeg-turbo bash nano sudo
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
