@@ -53,12 +53,6 @@ RUN cd /var/www/ && \
     rm -rf /var/www/orocommerce/.git && \
     chown www-data:www-data /var/www/orocommerce -R
 
-# Disable profiler, see https://github.com/oroinc/platform/pull/974
-# https://github.com/oroinc/platform/issues/910
-RUN echo $'\nframework:\n\
-    profiler:\n\
-        enabled: false' >> /var/www/orocommerce/config/config_prod.yml
-
 # Default range for docker, see index.php
 COPY php/www.conf /usr/local/etc/php-fpm.d/zzz-custom.conf
 COPY php/php.ini /usr/local/etc/php/conf.d/zzz-custom.ini
