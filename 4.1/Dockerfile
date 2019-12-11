@@ -1,9 +1,12 @@
 FROM php:7.2-fpm-alpine
 
-RUN apk --no-cache add nginx supervisor curl imagemagick libpng nodejs npm \
-    git rsync libldap freetype libjpeg-turbo bash nano sudo
-
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN apk --no-cache add nginx supervisor curl imagemagick libpng \
+    git libldap freetype libjpeg-turbo bash nano sudo && \
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+    curl -O 'https://unofficial-builds.nodejs.org/download/release/v12.9.1/node-v12.9.1-linux-x64-musl.tar.gz' && \
+    tar -xvzf node-v12.9.1-linux-x64-musl.tar.gz && rm node-v12.9.1-linux-x64-musl.tar.gz && \
+    mv node-v12.9.1-linux-x64-musl /opt/node-v12 && \
+    ln -s /opt/node-v12/bin/node /usr/bin/node && ln -s /opt/node-v12/bin/npm /usr/bin/npm
 
 # workaround for https://github.com/docker-library/php/issues/240
 RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ gnu-libiconv
