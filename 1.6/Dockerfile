@@ -1,7 +1,7 @@
 FROM php:7.1-fpm-alpine
 
 RUN apk --no-cache add nginx supervisor curl imagemagick libpng nodejs npm \
-    git patch libldap icu freetype libjpeg-turbo bash nano sudo
+    git patch libldap icu freetype libmcrypt libjpeg-turbo bash nano sudo
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
