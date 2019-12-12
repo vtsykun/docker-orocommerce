@@ -31,7 +31,7 @@ RUN set -eux; \
         --with-png-dir=/usr/include/ && \
         docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) gd; \
     \
-    docker-php-ext-install pdo pdo_pgsql pdo_mysql sysvsem opcache \
+    docker-php-ext-install pdo mcrypt pdo_pgsql pdo_mysql sysvsem opcache \
         bz2 soap xsl imap tidy xmlrpc mbstring iconv curl bcmath \
         ldap intl zip pcntl; \
     runDeps="$( \
