@@ -15,6 +15,7 @@ RUN set -eux; \
 		postgresql-dev \
 		icu-dev coreutils \
 		curl-dev \
+		libmcrypt-dev \
 		libpng-dev openldap-dev \
 		bzip2-dev libxml2-dev \
 		libxslt-dev imap-dev tidyhtml-dev \
