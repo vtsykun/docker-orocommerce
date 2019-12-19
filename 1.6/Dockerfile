@@ -52,7 +52,7 @@ RUN cd /var/www/ && \
     composer global require hirak/prestissimo && \
     composer install --no-interaction --no-suggest --no-dev --prefer-dist --working-dir /var/www/orocommerce && \
     rm -rf /var/www/orocommerce/.git && \
-    rm -rf /root/.composer
+    rm -rf /root/.composer && \
     chown www-data:www-data /var/www/orocommerce -R
 
 # Default range for docker, see index.php
