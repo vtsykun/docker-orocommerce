@@ -44,7 +44,7 @@ WORKDIR /var/www/orocommerce
 ENV HOME=/var/www/
 # Create fake database connection
 RUN set -eux; \
-    /etc/init.d/postgresql start; \
+    /etc/init.d/postgresql start; sleep 10;\
     psql -U postgres -h 127.0.0.1 -c "CREATE DATABASE test;"; \
     psql -U postgres -h 127.0.0.1 -d test -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";'; \
     find config -type f -name 'parameters.yml' \
@@ -100,7 +100,6 @@ RUN set -eux; \
 	\
 	apk del --no-network .build-deps
 
-ARG ORO_PLATFORM
 COPY --from=builder --chown=www-data /var/www/orocommerce /var/www/orocommerce
 
 # Default range for docker, see index.php

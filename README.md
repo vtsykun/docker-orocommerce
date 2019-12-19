@@ -2,6 +2,13 @@
 
 The simple Docker image to start use OroCommerce.
 
+## Features
+
+* A small Docker image (250-300 Mb) that based on `php:7.2-fpm-alpine`.
+* Allows to enable/disable cron, websocket and consumers count.
+* Easy to use - single container for web, cron, websocket and consumers.
+* Assets are already pre-installed in the docker image.
+
 ## Quick Start
 
 **Examples**
@@ -33,6 +40,51 @@ docker logs orocommerce --follow
 ```
 
 ## Additional Information
+
+Docker composer example.
+
+```yaml
+version: '2'
+
+services:
+    postgres:
+        hostname: postgres
+        container_name: postgres_orocommerce
+        image: postgres:9.6
+        volumes:
+            - .docker/db:/var/lib/postgresql/data
+        environment:
+            POSTGRES_DB: orocommerce
+            POSTGRES_PASSWORD: 123456
+        expose:
+            - "5432"
+
+    orocommerce:
+        image: okvpn/orocommerce:4.1
+        container_name: orocommerce
+        hostname: orocommerce
+        ports:
+            - 127.0.0.1:8085:80
+        volumes:
+            - .docker/attachment:/var/www/orocommerce/var/attachment
+            - .docker/media:/var/www/orocommerce/public/media
+            - .docker/uploads:/var/www/orocommerce/public/uploads
+        environment:
+            # installation options
+            APPLICATION_URL: https://orocommerce.companyname.org
+            ADMIN_USER: admin
+            ADMIN_PASSWORD: admin
+            ADMIN_EMAIL: admin@example.com
+            ADMIN_FIRST_NAME: Alieś
+            ADMIN_LAST_NAME: Zagorski
+            ORO_DATABASE_DRIVER: pdo_pgsql
+            ORO_DATABASE_HOST: postgres
+            ORO_DATABASE_PORT: 5432
+            ORO_DATABASE_USER: postgres
+            ORO_DATABASE_NAME: orocommerce
+            ORO_DATABASE_PASSWORD: 123456
+
+```
 
 #### Enable websocket
 To enable websocket, please use environment variable `ORO_WEBSOCKET=true`. By default websocket is disabled.
@@ -86,6 +138,8 @@ Other env options, see [here](3.1/php/env-map.php)
 * `ORO_WEBSOCKET` - Enable websocket `ORO_WEBSOCKET=true`
 
 * `ORO_CONSUMER_COUNT` - Count of consumers. `ORO_CONSUMER_COUNT=2`
+
+* `SKIP_ASSETS` - Skip install and build assets, default true. Assets are already pre-installed in the docker image. 
 
 ## Build image from source
 
