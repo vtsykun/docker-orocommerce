@@ -9,7 +9,8 @@
         "version_regex": "v?3\\.1\\.",
         "min": "3.1.15",
         "dir": "3.1/",
-        "lts": "3.1"
+        "lts": "3.1",
+        "exclude": ["3.1.16"]
     },
     {
         "version_regex": "v?4\\.1\\.",

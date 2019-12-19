@@ -23,7 +23,7 @@ docker_install_application() {
   sudo --preserve-env=LD_PRELOAD -u www-data php bin/console oro:install --env=prod --user-name="${ADMIN_USER}" --user-email="${ADMIN_EMAIL}" \
       --user-firstname="${ADMIN_FIRST_NAME}" --user-lastname="${ADMIN_LAST_NAME}" \
       --user-password="${ADMIN_PASSWORD}" --sample-data=n --organization-name="${ORGANIZATION_NAME}" \
-      --no-interaction --application-url="${APPLICATION_URL}" --timeout=3600 --symlink
+      --no-interaction --application-url="${APPLICATION_URL}" --symlink --timeout=3600 ${SKIP_ASSETS}
 }
 
 docker_configure_supervisor() {
@@ -58,7 +58,14 @@ chown www-data:www-data /var/www/orocommerce/public -R
 
 # check if application is installed
 [[ -z "${ORO_INSTALLED}" ]] && ORO_INSTALLED=$(php install-checker.php)
+[[ -z "${SKIP_ASSETS}" ]] && SKIP_ASSETS='true'
 rm -rf var/cache/*
+
+if [[ "$SKIP_ASSETS" == "true" ]]; then
+  SKIP_ASSETS='--skip-assets'
+else
+  SKIP_ASSETS=''
+fi
 
 if [[ "$ORO_INSTALLED" == "false" ]]; then
   echo 'Install OroCommerce'
@@ -76,7 +83,7 @@ else
   if [[ ! -f '/.oro-installed' ]]; then
     echo 'Update application ...'
     sudo --preserve-env=LD_PRELOAD -u www-data php bin/console oro:platform:update --env=prod \
-      --force --symlink --skip-search-reindexation --timeout=7200
+      --force --symlink --skip-search-reindexation --timeout=7200 ${SKIP_ASSETS}
   fi
 fi
 
