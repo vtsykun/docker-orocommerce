@@ -2,9 +2,8 @@
 
 use Symfony\Component\HttpFoundation\Request;
 
-$loader = require __DIR__.'/../vendor/autoload.php';
-
-require_once __DIR__.'/../src/AppKernel.php';
+$loader = require __DIR__.'/../app/autoload.php';
+require_once __DIR__.'/../app/AppKernel.php';
 
 if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
     $_SERVER['HTTPS']='on';
