@@ -27,7 +27,7 @@ RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-k
 
 RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.6/main/pg_hba.conf
 USER postgres
-RUN /etc/init.d/postgresql start && \
+RUN /etc/init.d/postgresql start && sleep 10 &&\
     psql -c "ALTER USER postgres WITH PASSWORD '${PGPASSWORD}'" -d template1
 
 USER www-data
@@ -44,7 +44,7 @@ WORKDIR /var/www/orocommerce
 ENV HOME=/var/www/
 # Create fake database connection
 RUN set -eux; \
-    /etc/init.d/postgresql start; sleep 10;\
+    /etc/init.d/postgresql start; sleep 15;\
     psql -U postgres -h 127.0.0.1 -c "CREATE DATABASE test;"; \
     psql -U postgres -h 127.0.0.1 -d test -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";'; \
     find config -type f -name 'parameters.yml' \
