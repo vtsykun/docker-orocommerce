@@ -91,4 +91,4 @@ fi
 touch /.oro-installed
 cat banner.txt
 
-"$@"
+exec "$@"
