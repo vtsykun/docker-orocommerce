@@ -73,7 +73,7 @@ RUN set -eux; \
 		icu-dev coreutils \
 		curl-dev \
 		libpng-dev openldap-dev \
-		bzip2-dev libxml2-dev \
+		bzip2-dev libzip-dev libxml2-dev \
 		libxslt-dev imap-dev tidyhtml-dev \
 		imagemagick-dev \
 		freetype-dev libjpeg-turbo-dev libpng-dev \
@@ -88,9 +88,11 @@ RUN set -eux; \
         --with-png-dir=/usr/include/ && \
         docker-php-ext-install -j$(getconf _NPROCESSORS_ONLN) gd; \
     \
-    docker-php-ext-install pdo pdo_pgsql pdo_mysql sysvsem opcache \
+    pecl install -o -f apcu; \
+    docker-php-ext-enable apcu; \
+    docker-php-ext-install zip pdo pdo_pgsql pdo_mysql sysvsem opcache \
         bz2 soap xsl imap tidy xmlrpc mbstring iconv curl bcmath \
-        ldap intl zip pcntl; \
+        ldap intl pcntl; \
     runDeps="$( \
 		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
 			| tr ',' '\n' \
