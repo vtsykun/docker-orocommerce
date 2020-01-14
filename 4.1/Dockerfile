@@ -8,10 +8,10 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     update-locale LANG=en_US.UTF-8
 
 RUN add-apt-repository ppa:ondrej/php && apt-get update && \
-    apt-get install -y --force-yes --no-install-recommends php7.2-mbstring php7.2-zip \
-    php7.2-cli php7.2-common php7.2-dev php7.2-pgsql php7.2-mysql php7.2-curl \
-    php7.2-gd php7.2-xmlrpc php7.2-bcmath php7.2-ldap php7.2-apcu \
-    php7.2-xsl php7.2-intl php7.2-soap php7.2-bz2 php7.2-tidy
+    apt-get install -y --force-yes --no-install-recommends php7.3-mbstring php7.3-zip \
+    php7.3-cli php7.3-common php7.3-dev php7.3-pgsql php7.3-mysql php7.3-curl \
+    php7.3-gd php7.3-xmlrpc php7.3-bcmath php7.3-ldap \
+    php7.3-xsl php7.3-intl php7.3-soap php7.3-bz2 php7.3-tidy
 
 RUN apt-get install -y --force-yes curl git patch wget sudo
 
@@ -53,7 +53,7 @@ RUN set -eux; \
     rm -rf var/cache/* var/logs/* vendor/oro/platform/build/node_modules
 
 # Main stages
-FROM php:7.2-fpm-alpine
+FROM php:7.3-fpm-alpine
 RUN apk --no-cache add nginx supervisor curl imagemagick libpng \
     git libldap freetype libjpeg-turbo bash nano sudo && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
