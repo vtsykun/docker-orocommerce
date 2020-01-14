@@ -119,7 +119,7 @@ COPY php/install-checker.php php/env-map.php php/banner.txt /var/www/orocommerce
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN rm /etc/supervisor.d/supervisord.conf && chmod +x /usr/local/bin/app && \
     chmod +x /usr/local/bin/docker-entrypoint.sh && \
-    chown www-data:www-data /var/tmp/nginx
+    chown www-data:www-data /var/lib/nginx /var/lib/nginx/tmp
 
 WORKDIR /var/www/orocommerce
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]

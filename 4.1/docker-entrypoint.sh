@@ -5,6 +5,14 @@ set -Eeox pipefail
 # sudo -u www-data
 # See bug https://github.com/oroinc/platform/issues/958
 
+install_lite_assets() {
+  # Exacute only lite commands
+  sudo --preserve-env=LD_PRELOAD -u www-data php bin/console assets:install --env=prod --symlink
+  sudo --preserve-env=LD_PRELOAD -u www-data php bin/console fos:js-routing:dump --env=prod
+  sudo --preserve-env=LD_PRELOAD -u www-data php bin/console oro:localization:dump --env=prod
+  sudo --preserve-env=LD_PRELOAD -u www-data php bin/console oro:translation:dump --env=prod
+}
+
 docker_install_application() {
   [[ -z "${ADMIN_FIRST_NAME}" ]] && ADMIN_FIRST_NAME='Alieś'
   [[ -z "${ADMIN_LAST_NAME}" ]] && ADMIN_LAST_NAME='Zagorski'
@@ -24,6 +32,11 @@ docker_install_application() {
       --user-firstname="${ADMIN_FIRST_NAME}" --user-lastname="${ADMIN_LAST_NAME}" \
       --user-password="${ADMIN_PASSWORD}" --sample-data=n --organization-name="${ORGANIZATION_NAME}" \
       --no-interaction --application-url="${APPLICATION_URL}" --timeout=3600 --symlink ${SKIP_ASSETS}
+
+  # Exacute only this commands
+  if [[ "$SKIP_ASSETS" == "--skip-assets" ]]; then
+    install_lite_assets
+  fi
 }
 
 docker_configure_supervisor() {
@@ -84,6 +97,11 @@ else
     echo 'Update application ...'
     sudo --preserve-env=LD_PRELOAD -u www-data php bin/console oro:platform:update --env=prod \
       --force --symlink --timeout=7200 ${SKIP_ASSETS}
+
+    # Exacute only this commands
+    if [[ "$SKIP_ASSETS" == "--skip-assets" ]]; then
+      install_lite_assets
+    fi
   fi
 fi
 
