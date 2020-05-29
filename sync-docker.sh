@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 set -Eeox pipefail
 
-# Auto generated at 2020-05-26T15:32:30+00:00
+# Auto generated at 2020-05-29T08:41:14+00:00
 docker pull php:7.2-fpm-alpine;
 docker pull php:7.3-fpm-alpine;
 exitCode=0;
 
 
-docker build 4.1/ --tag='okvpn/orocommerce:4.1.4' --build-arg ORO_PLATFORM=4.1.4 --memory=4000mb && docker push 'okvpn/orocommerce:4.1.4' || exitCode=$(( exitCode | $?))
-docker build 4.1/ --tag='okvpn/orocommerce:4.1' --build-arg ORO_PLATFORM=4.1.4 --memory=4000mb && docker push 'okvpn/orocommerce:4.1' || exitCode=$(( exitCode | $?))
-docker rmi 'okvpn/orocommerce:4.1.4' || true
+docker build 4.1/ --tag='okvpn/orocommerce:4.2.0-alpha.2' --build-arg ORO_PLATFORM=4.2.0-alpha.2 --memory=4000mb && docker push 'okvpn/orocommerce:4.2.0-alpha.2' || exitCode=$(( exitCode | $?))
+docker build 4.1/ --tag='okvpn/orocommerce:4.2' --build-arg ORO_PLATFORM=4.2.0-alpha.2 --memory=4000mb && docker push 'okvpn/orocommerce:4.2' || exitCode=$(( exitCode | $?))
+docker rmi 'okvpn/orocommerce:4.2.0-alpha.2' || true
 
 exit $exitCode;
