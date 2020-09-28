@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeox pipefail
 
-# Auto generated at 2020-09-28T11:36:01+00:00
+# Auto generated at 2020-09-28T12:32:46+00:00
 docker pull php:7.2-fpm-alpine;
 docker pull php:7.3-fpm-alpine;
 exitCode=0;
