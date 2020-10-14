@@ -76,7 +76,7 @@ RUN set -eux; \
 		bzip2-dev libzip-dev libxml2-dev \
 		libxslt-dev imap-dev tidyhtml-dev \
 		imagemagick-dev \
-		freetype-dev libjpeg-turbo-dev libpng-dev \
+		freetype-dev libjpeg-turbo-dev libpng-dev oniguruma-dev \
 	; \
 	\
 	export CFLAGS="$PHP_CFLAGS" \
