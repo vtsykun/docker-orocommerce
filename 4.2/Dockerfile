@@ -35,7 +35,6 @@ USER www-data
 ARG ORO_PLATFORM
 RUN cd /var/www/ && \
     git clone -b ${ORO_PLATFORM} https://github.com/oroinc/orocommerce-application.git orocommerce && \
-    composer global require hirak/prestissimo && \
     composer install --no-interaction --no-suggest --no-dev --prefer-dist --working-dir /var/www/orocommerce && \
     rm -rf /var/www/orocommerce/.git
 
@@ -63,7 +62,7 @@ RUN apk --no-cache add nginx supervisor curl imagemagick libpng \
     ln -s /opt/node-v14/bin/node /usr/bin/node && ln -s /opt/node-v14/bin/npm /usr/bin/npm
 
 # workaround for https://github.com/docker-library/php/issues/240
-RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ gnu-libiconv
+RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing gnu-libiconv
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 
 RUN set -eux; \
@@ -90,7 +89,7 @@ RUN set -eux; \
     \
     pecl install -o -f apcu; \
     docker-php-ext-enable apcu; \
-    docker-php-ext-install zip pdo pdo_pgsql pdo_mysql sysvsem opcache \
+    docker-php-ext-install zip pdo pdo_pgsql pdo_mysql sysvsem opcache gd \
         bz2 soap xsl imap tidy xmlrpc mbstring iconv curl bcmath \
         ldap intl pcntl; \
     runDeps="$( \
